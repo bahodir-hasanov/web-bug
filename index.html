@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Bug Hunters | Futuristik Portfolio</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none; /* Custom cursor for glow trail */
+    }
+
+    body {
+      background-color: #050b1a;
+      font-family: 'Poppins', sans-serif;
+      color: #e0f2fe;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Custom cursor light trail (glow effect) */
+    .cursor-trail {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      background: radial-gradient(circle, rgba(0, 255, 250, 0.8) 0%, rgba(0, 200, 255, 0) 80%);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      filter: blur(3px);
+      transition: transform 0.05s ease;
+      box-shadow: 0 0 15px cyan;
+    }
+
+    /* Particle canvas background */
+    #particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* main container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* HEADER neon */
+    .header {
+      text-align: center;
+      padding: 80px 20px 50px;
+    }
+    .jamoa-nomi {
+      font-family: 'Orbitron', monospace;
+      font-size: 4.5rem;
+      font-weight: 800;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #00ffff, #0099ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 30px rgba(0, 150, 255, 0.3);
+      animation: pulseGlow 2s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { text-shadow: 0 0 5px cyan, 0 0 15px #00aaff; }
+      100% { text-shadow: 0 0 20px cyan, 0 0 35px #00aaff; }
+    }
+
+    /* section titles */
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.5rem;
+      margin: 60px 0 40px;
+      text-align: center;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
+      padding-bottom: 10px;
+      border-bottom: 3px solid #00ccff;
+      box-shadow: 0 5px 15px rgba(0, 204, 255, 0.2);
+    }
+
+    /* Cards grid */
+    .team-grid, .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 35px;
+      margin: 40px 0;
+    }
+
+    /* card style */
+    .card {
+      background: rgba(10, 25, 47, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 28px;
+      padding: 25px 20px 20px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      border-color: #0cf;
+      box-shadow: 0 0 22px rgba(0, 204, 255, 0.8), 0 10px 30px rgba(0,0,0,0.5);
+      background: rgba(0, 30, 60, 0.8);
+    }
+    .card-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 15px;
+      display: block;
+      border: 2px solid cyan;
+      box-shadow: 0 0 12px cyan;
+      transition: 0.3s;
+    }
+    .card h3 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin: 12px 0 5px;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 1px;
+    }
+    .card p {
+      color: #bbddff;
+    }
+
+    /* project card */
+    .project-card {
+      background: rgba(8, 20, 40, 0.8);
+      backdrop-filter: blur(6px);
+      border-radius: 24px;
+      padding: 20px;
+      transition: all 0.35s ease;
+      border: 1px solid #0cf3;
+      cursor: pointer;
+    }
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: cyan;
+      box-shadow: 0 0 25px cyan;
+    }
+    .project-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      border: 1px solid cyan;
+    }
+    .project-card h3 {
+      font-size: 1.5rem;
+      font-family: 'Orbitron', monospace;
+      margin: 10px 0;
+    }
+
+    /* contact section */
+    .contact-section {
+      background: rgba(0, 19, 25, 0.6);
+      border-radius: 50px;
+      padding: 45px 30px;
+      margin: 70px 0 60px;
+      text-align: center;
+      border: 1px solid cyan;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+    }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 35px;
+      flex-wrap: wrap;
+      margin-top: 35px;
+    }
+    .social-icons a {
+      color: #eef5ff;
+      font-size: 2.4rem;
+      transition: 0.3s;
+      display: inline-block;
+    }
+    .social-icons a:hover {
+      color: #0cf;
+      text-shadow: 0 0 18px cyan;
+      transform: scale(1.2);
+    }
+    .contact-info p {
+      font-size: 1.2rem;
+      margin: 12px 0;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      transition: 0.2s;
+    }
+    .modal-content {
+      background: #071a2b;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 38px;
+      padding: 25px 30px;
+      border: 2px solid cyan;
+      box-shadow: 0 0 45px cyan;
+      color: white;
+      position: relative;
+      animation: fadeSlideUp 0.3s ease;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 32px;
+      cursor: pointer;
+      color: cyan;
+      transition: 0.2s;
+    }
+    .close-modal:hover {
+      text-shadow: 0 0 10px white;
+      transform: scale(1.1);
+    }
+    .modal h2 {
+      font-family: 'Orbitron', monospace;
+      margin-bottom: 15px;
+    }
+    .skill-badge {
+      display: inline-block;
+      background: #0cf22a;
+      background: linear-gradient(145deg, #0099ff, #00ccff);
+      padding: 5px 12px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      margin: 5px 6px 0 0;
+      color: #021a2b;
+      font-weight: bold;
+    }
+    .contact-modal a {
+      color: cyan;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .jamoa-nomi {
+        font-size: 2.2rem;
+        letter-spacing: 3px;
+      }
+      .container {
+        padding: 0 18px;
+      }
+      .card-img {
+        width: 110px;
+        height: 110px;
+      }
+      .section-title {
+        font-size: 1.8rem;
+      }
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    button, a, .card, .project-card {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <h1 class="jamoa-nomi">Bug Hunters</h1>
+    <p style="margin-top: 15px; font-size: 1.2rem; letter-spacing: 1px;">✦ Digital Future Architects ✦</p>
+  </div>
+
+  <!-- Team Section -->
+  <h2 class="section-title">⚡ JAMOA AZOLARI ⚡</h2>
+  <div class="team-grid" id="teamGrid"></div>
+
+  <!-- Projects Section -->
+  <h2 class="section-title"> LOYIHALARIMIZ </h2>
+  <div class="projects-grid" id="projectsGrid"></div>
+
+  <!-- Contact Section -->
+  <div class="contact-section">
+    <h2 style="font-family: 'Orbitron'; font-size: 2rem;">🌐 BOG'LANISH</h2>
+    <div class="contact-info">
+      <p><i class="fab fa-telegram"></i> Telegram kanal: <strong>@Bug_hunters5</strong></p>
+      <p><i class="fas fa-envelope"></i> Umumiy email: <strong>???</strong></p>
+    </div>
+    <div class="social-icons">
+      <a href="https://t.me/Bug_hunters5" target="_blank"><i class="fab fa-telegram"></i></a>
+      <a href="https://github.com/bug-hunters-team" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:bug.hunters.team@example.com"><i class="fas fa-envelope"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+    </div>
+    <p style="margin-top: 28px; font-size: 0.9rem;">✨ Har bir a'zo kartasiga bosing – to‘liq ma’lumotlar ✨</p>
+  </div>
+  <footer>© 2025 Bug Hunters | Neon Future | All systems operational</footer>
+</div>
+
+<!-- Modal Structure -->
+<div id="memberModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h2 id="modalName"></h2>
+    <p><strong><i class="fas fa-user-astronaut"></i> Rol:</strong> <span id="modalRole"></span></p>
+    <p><strong><i class="fas fa-comment"></i> Bio:</strong> <span id="modalBio"></span></p>
+    <p><strong><i class="fas fa-code"></i> Ko‘nikmalar:</strong> <span id="modalSkills"></span></p>
+    <div class="contact-modal">
+      <strong><i class="fab fa-telegram"></i> Kontakt:</strong>
+      <span id="modalTelegram"></span> &nbsp;|&nbsp;
+      <i class="fas fa-envelope"></i> <span id="modalEmail"></span> &nbsp;|&nbsp;
+      <i class="fab fa-github"></i> <span id="modalGithub"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Project Modal (for details) -->
+<div id="projectModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeProjectModal">&times;</span>
+    <h2 id="projectModalTitle"></h2>
+    <p id="projectModalDesc" style="margin-top: 20px; line-height: 1.5;"></p>
+    <div style="margin-top: 25px;">
+      <a href="#" id="projectModalLink" target="_blank" style="background: cyan; color: black; padding: 8px 22px; border-radius: 40px; text-decoration: none; font-weight: bold;">🔗 Batafsil / Loyiha</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --------------------------------------------
+  // 1. TEAM DATA (5 members) with full info
+  // Rasmlar papkadan olinadi: "rasmlar/" papkasiga qo'yiladi.
+  // Rasm nomlari: bahodir.jpg, jahongir.jpg, muhammad.jpg, shoxsanam.jpg, dilbar.jpg
+  // Agar fayllar boshqa nom bilan bo'lsa, o'zgartirish mumkin.
+  // --------------------------------------------
+  const teamMembers = [
+    {
+      id: 1,
+      name: "Hasanov Bahodir",
+      role: "Jamoa Sardori / Full-stack Developer",
+      bio: "SamTUIT 1-kurs talabasi. Dasturlashga ishtiyoq bilan yondashadi, jamoa yetakchisi.",
+      skills: ["Python", "Django", "C++", "DB"],
+      telegram: "@dev_boha",
+      email: "hasanovbahodir003@gmail.com",
+      github: "bahodir-hasanov",
+      img: "rasmlar/bahodir.jpg"
+    },
+    {
+      id: 2,
+      name: "Sayfiyev Jahongir",
+      role: "Backend & C++ Developer",
+      bio: "SamTUIT 1-kurs talabasi. C++ va web texnologiyalarga qiziqadi. Algoritmlar ustasi.",
+      skills: ["C++", "HTML/CSS"],
+      telegram: "@Gk_joxa_0203",
+      email: "???",
+      github: "???",
+      img: "rasmlar/jahongir.jpg"
+    },
+    {
+      id: 3,
+      name: "Esonboyev Muhammad",
+      role: "C++ Dasturchi",
+      bio: "SamTUIT 1-kurs talabasi, C++ bo'yicha ixtisoslashgan. O'yin va algoritm yozishni yaxshi ko'radi.",
+      skills: ["C++"],
+      telegram: "@MRCyberix",
+      email: "???",
+      github: "???",
+      img: "rasmlar/muhammad.jpg"
+    },
+    {
+      id: 4,
+      name: "Saydullayeva Shoxsanam",
+      role: "C++ Dasturchi / UI Assistant",
+      bio: "SamTUIT 1-kurs talabasi. Chiroyli kod va dizayn kombinatsiyasi. C++ va frontend.",
+      skills: ["C++", "HTML/CSS"],
+      telegram: "@Azzamovna_24_07",
+      email: "???",
+      github: "???",
+      img: "rasmlar/shoxsanam.jpg"
+    },
+    {
+      id: 5,
+      name: "Abdullayeva Dilbar",
+      role: "C++ Dasturchi",
+      bio: "SamTUIT 1-kurs talabasi. Dasturlash va muammolarni yechishga ixtisoslashgan. Jamoada faol.",
+      skills: ["C++", "Algorithms",  "Teamwork"],
+      telegram: "@dildascc",
+      email: "???",
+      github: "???",
+      img: "rasmlar/dilbar.jpg"
+    }
+  ];
+
+  // Projects data (2 loyiha, har biri batafsil ma'lumot va rasm)
+  // Rasmlar "rasmlar_prayekt/" papkasida, nomlari: loyiha1.jpg, loyiha2.jpg
+  // (Siz rasm nomini shu tarzda moslashtirasiz)
+  const projects = [
+    {
+      id: 1,
+      title: "Koptok-B ",
+      shortDesc: "Klassik arkada uslubidagi o‘yin, bloklarni sindirish va darajalar.",
+      fullDesc: `Koptok-B — bu klassik arkada uslubidagi qiziqarli va dinamik o‘yin bo‘lib, unda o‘yinchi platformani boshqarib, koptok yordamida yuqoridagi bloklarni yo‘q qilishi kerak. O‘yinda siz: Pastdagi platformani harakatlantirib koptokni qaytarasiz, koptok orqali yuqoridagi g‘isht (blok)larni sindirasiz, har bir urilgan blok sizga ochko olib keladi. ⚙️ Asosiy imkoniyatlar: Bir nechta darajalar, koptoklar soni cheklangan, jon tizimi, real vaqt hisoblagichlar (Ball, Jon, Daraja), Pauza qilish imkoniyati (P tugmasi orqali). 🎯 Maqsad: Barcha bloklarni yo‘q qilib, maksimal ochko to‘plash va keyingi darajaga o‘tish. 🎨 Dizayn: Rang-barang va ko‘zga yoqimli interfeys. 🕹️ Boshqaruv: ⬅️ ➡️ platformani harakatlantirish, P — pauza.`,
+      img: "rasmlar_prayekt/loyiha1.jpg",
+      link: "https://t.me/bug_hunters_5"
+    },
+    {
+      id: 2,
+      title: "Kalkulator",
+      shortDesc: "Zamonaviy interfeysli kalkulyator, barcha arifmetik amallar.",
+      fullDesc: `Kalkulyator ilovasi — sodda, qulay va zamonaviy interfeysga ega hisoblash dasturi bo‘lib, kundalik matematik amallarni tez va oson bajarish uchun mo‘ljallangan. ⚙️ Asosiy imkoniyatlar: Asosiy arifmetik amallar (+, -, ×, ÷), foiz (%) hisoblash imkoniyati, natijani tez chiqarish (= tugmasi), xatolik yuz bersa “Error” xabari, tozalash (C) va o‘chirish (⌫) tugmalari. 🎨 Dizayn: Qora (dark) fon va zamonaviy ko‘rinish, to‘q rangli tugmalar va ajralib turuvchi amallar paneli. Minimalistik va foydalanuvchi uchun qulay interfeys. 🕹️ Foydalanish: Raqam tugmalari orqali son kiriting, amalni tanlang, “=” bosib natija oling.`,
+      img: "rasmlar_prayekt/loyiha2.jpg",
+      link: "https://t.me/bug_hunters_5"
+    }
+  ];
+
+  // Render team cards
+  const teamGrid = document.getElementById('teamGrid');
+  teamMembers.forEach(member => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.innerHTML = `
+            <img class="card-img" src="${member.img}" alt="${member.name}" onerror="this.src='https://placehold.co/400x400/0a192f/cyan?text=${member.name.split(' ')[0]}'">
+            <h3>${member.name}</h3>
+            <p>${member.role}</p>
+        `;
+    card.addEventListener('click', () => openMemberModal(member));
+    teamGrid.appendChild(card);
+  });
+
+  // Modal open function
+  const memberModal = document.getElementById('memberModal');
+  const modalName = document.getElementById('modalName');
+  const modalRole = document.getElementById('modalRole');
+  const modalBio = document.getElementById('modalBio');
+  const modalSkills = document.getElementById('modalSkills');
+  const modalTelegram = document.getElementById('modalTelegram');
+  const modalEmail = document.getElementById('modalEmail');
+  const modalGithub = document.getElementById('modalGithub');
+
+  function openMemberModal(member) {
+    modalName.innerText = member.name;
+    modalRole.innerText = member.role;
+    modalBio.innerText = member.bio;
+    modalSkills.innerHTML = member.skills.map(skill => `<span class="skill-badge">${skill}</span>`).join(' ');
+    modalTelegram.innerHTML = `<a href="https://t.me/${member.telegram.replace('@','')}" target="_blank">${member.telegram}</a>`;
+    modalEmail.innerText = member.email;
+    modalGithub.innerHTML = member.github !== '@!' ? `<a href="https://github.com/${member.github}" target="_blank">${member.github}</a>` : 'mavjud emas';
+    memberModal.style.display = 'flex';
+  }
+
+  // Project rendering
+  const projectsGrid = document.getElementById('projectsGrid');
+  projects.forEach(proj => {
+    const projCard = document.createElement('div');
+    projCard.classList.add('project-card');
+    projCard.innerHTML = `
+            <img class="project-img" src="${proj.img}" alt="${proj.title}" onerror="this.src='https://placehold.co/600x400/0a2a3a/cyan?text=${proj.title.substring(0,10)}'">
+            <h3>${proj.title}</h3>
+            <p>${proj.shortDesc}</p>
+        `;
+    projCard.addEventListener('click', () => openProjectModal(proj));
+    projectsGrid.appendChild(projCard);
+  });
+
+  const projectModal = document.getElementById('projectModal');
+  const projectModalTitle = document.getElementById('projectModalTitle');
+  const projectModalDesc = document.getElementById('projectModalDesc');
+  const projectModalLink = document.getElementById('projectModalLink');
+
+  function openProjectModal(project) {
+    projectModalTitle.innerText = project.title;
+    projectModalDesc.innerText = project.fullDesc;
+    projectModalLink.href = project.link;
+    projectModal.style.display = 'flex';
+  }
+
+  // Close modal events
+  document.querySelectorAll('.close-modal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      memberModal.style.display = 'none';
+      projectModal.style.display = 'none';
+    });
+  });
+  window.addEventListener('click', (e) => {
+    if (e.target === memberModal) memberModal.style.display = 'none';
+    if (e.target === projectModal) projectModal.style.display = 'none';
+  });
+
+  // Cursor trail effect (glow light)
+  const trail = document.getElementById('cursorTrail');
+  document.addEventListener('mousemove', (e) => {
+    trail.style.left = e.clientX + 'px';
+    trail.style.top = e.clientY + 'px';
+  });
+  document.body.addEventListener('mouseleave', () => {
+    trail.style.opacity = '0';
+  });
+  document.body.addEventListener('mouseenter', () => {
+    trail.style.opacity = '1';
+  });
+
+  // Particles background effect
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  let particlesArray = [];
+  const particleCount = 110;
+
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.size = Math.random() * 2.5 + 1;
+      this.speedX = (Math.random() - 0.5) * 0.8;
+      this.speedY = (Math.random() - 0.5) * 0.5;
+      this.color = `rgba(0, 180, 255, ${Math.random() * 0.5 + 0.2})`;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x > width) this.x = 0;
+      if (this.x < 0) this.x = width;
+      if (this.y > height) this.y = 0;
+      if (this.y < 0) this.y = height;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = "#0cf";
+    }
+  }
+  function initParticles() {
+    particlesArray = [];
+    for (let i = 0; i < particleCount; i++) {
+      particlesArray.push(new Particle());
+    }
+  }
+  function animateParticles() {
+    ctx.clearRect(0, 0, width, height);
+    for (let p of particlesArray) {
+      p.update();
+      p.draw();
+    }
+    requestAnimationFrame(animateParticles);
+  }
+  initParticles();
+  animateParticles();
+
+  // Additional smooth link for glow hover interactions
+  const allCards = document.querySelectorAll('.card, .project-card, .social-icons a');
+  allCards.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      el.style.transition = 'all 0.25s ease';
+    });
+  });
+
+  console.log("Bug Hunters portfolio ready | Dark neon future");
+</script>
+
+</body>
+</html>
